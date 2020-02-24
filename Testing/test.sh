@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 ##################################
 # set CREATE_EXP_FILE=1 if you want this script to create the Expected Results for the regression tests
@@ -10,26 +10,23 @@ echoerr() { echo "$@" 1>&2; }
 ## Set LD_LIBRARY_PATH so that tlsh can pick up the tlsh shared library
 export LD_LIBRARY_PATH=../lib:$LD_LIBRARY_PATH
 BASEDIR=$(dirname $0)
-pushd $BASEDIR > /dev/null
+cd $BASEDIR
 
 if test ! -f ../bin/tlsh
 then
 	echoerr "error: (127), you must compile tlsh"
-        popd > /dev/null
 	exit 127
 fi
 
 if test ! -f ../bin/simple_unittest
 then
 	echoerr "error: (127), you must compile ../bin/simple_unittest"
-        popd > /dev/null
 	exit 127
 fi
 
 if test ! -f ../bin/tlsh_version
 then
 	echoerr "error: (127), you must compile ../bin/tlsh_version"
-        popd > /dev/null
 	exit 127
 fi
 
@@ -91,7 +88,6 @@ runit() {
 		if test $CREATE_EXP_FILE = 0
 		then
 			echoerr "error: (1), Expected Result file $EXPECTED_OUT does not exist"
-			popd > /dev/null
 			exit 1
 		else
 			echo "cp $TMP/example_data.out $EXPECTED_OUT"
@@ -103,7 +99,6 @@ runit() {
 		if test $CREATE_EXP_FILE = 0
 		then
 			echoerr "error: (1), Expected Result file $EXPECTED_ERR does not exist"
-			popd > /dev/null
 			exit 1
 		else
 			echo "cp $TMP/example_data.err $EXPECTED_ERR"
@@ -115,7 +110,6 @@ runit() {
 	if test ! $diffc = 0
 	then
 		echoerr "error: (1), diff $TMP/example_data.out $EXPECTED_OUT"
-		popd > /dev/null
 		exit 1
 	fi
 
@@ -123,7 +117,6 @@ runit() {
 	if test ! $diffc = 0
 	then
 		echoerr "error: (1), diff $TMP/example_data.err $EXPECTED_ERR"
-		popd > /dev/null
 		exit 1
 	fi
 
@@ -154,7 +147,6 @@ runit() {
 		if test $CREATE_EXP_FILE = 0
 		then
 			echoerr "error: (1), Expected Result file $EXPECTED_SCO does not exist"
-			popd > /dev/null
 			exit 1
 		else
 			echo "cp $TMP/example_data.scores $EXPECTED_SCO"
@@ -166,7 +158,6 @@ runit() {
 		if test $CREATE_EXP_FILE = 0
 		then
 			echoerr "error: (1), Expected Result file $EXPECTED_ERR does not exist"
-			popd > /dev/null
 			exit 1
 		else
 			echo "cp $TMP/example_data.err2 $EXPECTED_ERR"
@@ -178,14 +169,12 @@ runit() {
 	if test ! $diffc = 0
 	then
 		echoerr "error: (2), diff $TMP/example_data.scores $EXPECTED_SCO"
-		popd > /dev/null
 		exit 2
 	fi
 	diffc=`diff --ignore-all-space $TMP/example_data.err2 $EXPECTED_ERR | wc -l`
 	if test ! $diffc = 0
 	then
 		echoerr "error: (2), diff $TMP/example_data.err2 $EXPECTED_ERR"
-		popd > /dev/null
 		exit 2
 	fi
 
@@ -218,7 +207,6 @@ runit() {
 		if test $CREATE_EXP_FILE = 0
 		then
 			echoerr "error: (3), Expected Result file $EXPECTED_SCO does not exist"
-			popd > /dev/null
 			exit 1
 		else
 			echo "cp $TMP/example_data.scores.2 $EXPECTED_SCO"
@@ -230,7 +218,6 @@ runit() {
 	if test ! $diffc = 0
 	then
 		echoerr "error: (3) diff $TMP/example_data.scores.2 $EXPECTED_SCO"
-		popd > /dev/null
 		exit 3
 	fi
 
@@ -259,7 +246,6 @@ runit() {
 		if test $CREATE_EXP_FILE = 0
 		then
 			echoerr "error: ($testnum), Expected Result file $EXPECTED_SCO does not exist"
-			popd > /dev/null
 			exit 1
 		else
 			echo "cp $TMP/example_data.xref.scores $EXPECTED_SCO"
@@ -270,7 +256,6 @@ runit() {
 	diff --ignore-all-space $TMP/example_data.xref.scores $EXPECTED_SCO > /dev/null 2>/dev/null
 	if [ $? -ne 0 ]; then
 		echoerr "error: ($testnum), diff $TMP/example_data.xref.scores $EXPECTED_SCO"
-		popd > /dev/null
 		exit $testnum
 	fi
 
@@ -301,7 +286,6 @@ runit() {
 		if test $CREATE_EXP_FILE = 0
 		then
 			echoerr "error: ($testnum), Expected Result file $EXPECTED_SCO does not exist"
-			popd > /dev/null
 			exit 1
 		else
 			echo "cp $TMP/example_data.scores.2.T-201 $EXPECTED_SCO"
@@ -312,7 +296,6 @@ runit() {
 	diff --ignore-all-space $TMP/example_data.scores.2.T-201 $EXPECTED_SCO > /dev/null 2>/dev/null
 	if [ $? -ne 0 ]; then
 		echoerr "error: ($testnum) diff $TMP/example_data.scores.2.T-201 $EXPECTED_SCO"
-		popd > /dev/null
 		exit $testnum
 	fi
 
@@ -351,7 +334,6 @@ then
 	if test $CREATE_EXP_FILE = 0
 	then
 		echoerr "error: ($testnum), Expected Result file $EXPECTED_TESTLEN does not exist"
-		popd > /dev/null
 		exit 1
 	else
 		echo "cp $TMP/testlen.out $EXPECTED_TESTLEN"
@@ -362,7 +344,6 @@ fi
 diff --ignore-all-space $TMP/testlen.out $EXPECTED_TESTLEN > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
 	echoerr "error: ($testnum) diff $TMP/testlen.out $EXPECTED_TESTLEN"
-	popd > /dev/null
 	exit $testnum
 fi
 echo "passed"
@@ -390,7 +371,6 @@ for file in small small2 ; do
 		if test $CREATE_EXP_FILE = 0
 		then
 			echoerr "error: ($testnum), Expected Result file $EXPECTED_TLSH does not exist"
-			popd > /dev/null
 			exit 1
 		else
 			echo "cp $TMP/$file.tlsh $EXPECTED_TLSH"
@@ -401,7 +381,6 @@ for file in small small2 ; do
 	diff --ignore-all-space $TMP/$file.tlsh $EXPECTED_TLSH
 	if [ $? -ne 0 ]; then
 		echoerr "error: ($testnum) $TMP/$file.tlsh $EXPECTED_TLSH"
-		popd > /dev/null
 		exit $testnum
 	fi
 done
@@ -432,14 +411,12 @@ EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.len.scores.2.T-201_EXP
 if test ! -f $EXPECTED_SCO
 then
 	echoerr "error: ($testnum), Expected Result file $EXPECTED_SCO does not exist"
-	popd > /dev/null
 	exit 1
 fi
 
 diff --ignore-all-space $TMP/example_data.scores.l2.T-201 $EXPECTED_SCO > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
 	echoerr "error: ($testnum) diff $TMP/example_data.scores.l2.T-201 $EXPECTED_SCO"
-	popd > /dev/null
 	exit $testnum
 fi
 
@@ -454,7 +431,6 @@ echo "../bin/${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c ../Te
 diff --ignore-all-space $TMP/example_data.scores.l2csv.T-201 $EXPECTED_SCO > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
 	echoerr "error: ($testnum) diff $TMP/example_data.scores.l2csv.T-201 $EXPECTED_SCO"
-	popd > /dev/null
 	exit $testnum
 fi
 
@@ -480,14 +456,12 @@ EXPECTED_RES=exp/example_data.Week3.split.tlsh
 if test ! -f $EXPECTED_RES
 then
 	echoerr "error: ($testnum), Expected Result file $EXPECTED_RES does not exist"
-	popd > /dev/null
 	exit 1
 fi
 
 diff --ignore-all-space $TMP/example_data.Week3.split.tlsh $EXPECTED_RES > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
 	echoerr "error: ($testnum) diff $TMP/example_data.Week3.split.tlsh $EXPECTED_RES"
-	popd > /dev/null
 	exit $testnum
 fi
 
@@ -512,7 +486,6 @@ then
 	if test $CREATE_EXP_FILE = 0
 	then
 		echoerr "error: ($testnum), Expected Result file $EXPECTED_STEST does not exist"
-		popd > /dev/null
 		exit 1
 	else
 		echo "cp $TMP/simple_unittest.out $EXPECTED_STEST"
@@ -523,13 +496,10 @@ fi
 diff --ignore-all-space $TMP/simple_unittest.out $EXPECTED_STEST > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
 	echoerr "error: ($testnum) diff $TMP/simple_unittest.out $EXPECTED_STEST"
-        popd > /dev/null
-	exit -1
+	exit 255
 fi
 
 echo "passed all example data tests"
-
-popd > /dev/null
 
 echo
 echo "If you have made changes to the Tlsh python module, build and install it, and run python_test.sh"
